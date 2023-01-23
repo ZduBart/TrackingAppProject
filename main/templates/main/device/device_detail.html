@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+{% block content %}
+  <h1>Device details</h1>
+    <h3>
+    <ul style="list-style: none;">
+        <li>ID: {{ device.device_id }} Model {{ device.device_desc }} </li>
+        <li>{% if vehicle is not None %} Mounted in {{ vehicle.vehicle_desc }} on {{ device.dt_start }}{% else %} Currently unassigned {% endif %}  </li>
+            <ul>Measured parameters:
+                {% for param in params %}
+                <li>{{ param.param_id.param_desc }}</li>
+                {% endfor %}
+            </ul>
+
+    </ul>
+    </h3>
+
+        <a class="btn btn-outline-secondary" href="{% url 'device_update'  device.device_id %}">Update device</a>
+        <a class="btn btn-outline-secondary" href="{% url 'device_delete'  device.device_id %}">Delete device</a>
+{% endblock %}

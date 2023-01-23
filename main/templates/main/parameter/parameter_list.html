@@ -1,0 +1,13 @@
+{% extends "main/base.html" %}
+{% block content %}
+  <h1>Avaliable parameters</h1>
+  <ul>
+    {% for param in object_list %}
+      <li>
+            <a class="list-group-item list-group-item-action" href = "{% url 'parameter_detail' param.param_id %}"> {{ param.param_id }} {{ param.param_desc }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+        <a class="btn btn-outline-secondary" href="{% url 'parameter_create' %}">Add new parameter</a>
+
+{% endblock %}

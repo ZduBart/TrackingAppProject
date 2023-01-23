@@ -1,0 +1,17 @@
+{% extends "main/base.html" %}
+{% block content %}
+  <h1>Parameter details</h1>
+  <h3>
+        {{ param.param_id }} {{ param.param_desc }}
+  </h3>
+    <ul style="list-style: none;">
+     <li>Devices able to measure this parameter</li>
+        {% for device in devices %}
+                <li>{{ device.device_id.device_desc }}</li>
+        {% endfor %}
+
+    </ul>
+        <a class="btn btn-outline-secondary" href="{% url 'parameter_update' param.param_id %}">Edit parameter</a>
+        <a class="btn btn-outline-secondary" href="{% url 'parameter_delete' param.param_id %}">Delete parameter</a>
+
+{% endblock %}
