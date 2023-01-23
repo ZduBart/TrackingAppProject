@@ -1,0 +1,10 @@
+{% extends "main/base.html" %}
+{% block content %}
+  <h1>Device details</h1>
+  <ul>
+            <a>Device: {{ device.device_desc }} currently mounted in: {{ vehicle.vehicle_desc }}</a>
+  </ul>
+
+        <a class="btn btn-outline-secondary" href="{% url 'device_update'  device.device_id %}">Update device</a>
+        <a class="btn btn-outline-secondary" href="{% url 'device_delete'  device.device_id %}">Delete device</a>
+{% endblock %}

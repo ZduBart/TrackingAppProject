@@ -1,0 +1,17 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class = 'content-section'>
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Delete device</legend>
+                <h3>Are you sure you want to delete {{ object.device_id }}</h3>
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-danger" type="submit">Yes</button>
+            <a class="btn btn-outline-secondary" href="{%  url 'device_detail' object.device_id %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
