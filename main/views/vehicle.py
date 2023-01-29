@@ -1,7 +1,5 @@
-from django.utils import timezone
 from django.urls import reverse_lazy
-from django.shortcuts import get_list_or_404, get_object_or_404, render
-from main.forms import VehicleUpdateForm
+from django.shortcuts import render
 from django.views.generic import (
     ListView,
     DetailView,
@@ -14,34 +12,56 @@ from main.models.vehicles import Vehicles
 from main.models.logs import DataLogs
 from main.models.devices import TrackingDevices
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class VehiclesListView(LoginRequiredMixin, ListView):
-    login_required = True
     template_name = "main/vehicle/vehicle_list.html"
     model = Vehicles
+
+    def get_queryset(self):
+        vehicle_search = self.request.GET.get("name", "").lower()
+        vehicles = self.model.objects.all()
+        if len(vehicle_search) > 0:
+            vehicles = vehicles.filter(vehicle_desc__icontains=vehicle_search)
+        return vehicles
 
 
 class VehiclesDetailView(LoginRequiredMixin, View):
     template_name = "main/vehicle/vehicle_details.html"
 
     def get(self, request, pk):
-        vehicle = get_object_or_404(Vehicles, pk=pk)
+
+        page_num = request.GET.get("page", 1)
+
         try:
-            logs = get_list_or_404(DataLogs, vehicle_id=vehicle.vehicle_id)[::-1]
-        except:
-            logs = None
-        try:
-            device = get_object_or_404(
-                TrackingDevices, vehicle_id=vehicle.vehicle_id, active_device=True
+            vehicle = Vehicles.objects.get(pk=pk)
+        except Vehicles.DoesNotExist:
+            return render(
+                request, template_name=self.template_name, context={"vehicle": None}
             )
-        except:
-            device = None
+
+        logs = DataLogs.objects.filter(vehicle_id=vehicle.vehicle_id).all()[::-1]
+        device = TrackingDevices.objects.filter(
+            vehicle_id=vehicle.vehicle_id, active_device=True
+        ).first()
+
+        paginator = Paginator(logs, 10)
+        try:
+            page_obj = paginator.page(page_num)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
 
         return render(
             request,
             template_name=self.template_name,
-            context={"logs": logs, "vehicle": vehicle, "device": device},
+            context={
+                "logs_paginator": page_obj,
+                "vehicle": vehicle,
+                "device": device,
+            },
         )
 
 

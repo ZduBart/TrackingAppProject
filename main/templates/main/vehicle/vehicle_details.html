@@ -1,39 +1,46 @@
 {% extends "main/base.html" %}
 {% block content %}
-  <h1>Vehicle details:</h1>
-    <h3>
-    <ul style="list-style: none;">
-        <li>ID: {{ vehicle.vehicle_id }} Make, model: {{ vehicle.vehicle_desc }} </li>
-        <li>Bought: {{ vehicle.dt_bought }} {% if vehicle.dt_sold %} Sold: {{ vehicle.dt_sold }} {% endif %} </li>
-        <li>{% if vehicle.active_vehicle %} Currently avaliable {% else %} Currently unavaliable {% endif %}</li>
-        <li>{% if device is not None %} Mounted device id: {{ device.device_id }} {% else %} No devices mounted {% endif %}</li>
-    </ul>
-    </h3>
+    {% if vehicle is not None %}
+        <h1>Vehicle details:</h1>
+        <h3>
+            <ul style="list-style: none;">
+                <li>ID: {{ vehicle.vehicle_id }} Make, model: {{ vehicle.vehicle_desc }} </li>
+                <li>Bought: {{ vehicle.dt_bought }} {% if vehicle.dt_sold %} Sold: {{ vehicle.dt_sold }} {% endif %} </li>
+                <li>{% if vehicle.active_vehicle %} Currently avaliable {% else %} Currently unavaliable {% endif %}</li>
+                <li>{% if device is not None %} Mounted device id: {{ device.device_id }} {% else %} No devices
+                    mounted {% endif %}</li>
+            </ul>
+        </h3>
 
         <a class="btn btn-outline-secondary" href="{% url 'vehicle_update' vehicle.vehicle_id %}">Edit vehicle</a>
         <a class="btn btn-outline-secondary" href="{% url 'vehicle_delete' vehicle.vehicle_id %}">Delete vehicle</a>
-    {% if logs is not None  %}
-    <table class="table table-striped">
-          <tr class="text-center">
-            <th scope="col" >Log ID</th>
-            <th scope="col" >Device ID</th>
-            <th scope="col" >Date Time</th>
-            <th scope="col" >engine RPM</th>
-            <th scope="col" >Engine ON</th>
-            <th scope="col" >Coolant temp</th>
-          </tr>
-              {% for log in logs %}
-          <tr class="text-center">
-            <td>{{ log.id }}</td>
-            <td>{{ log.device_id.device_id }}</td>
-            <td>{{ log.dt_log }}</td>
-            <td>{{ log.engine_rpm }}</td>
-            <td>{{ log.engine_on }}</td>
-            <td>{{ log.coolant_temp }}</td>
-          </tr>
-              {% endfor %}
-    {% else %} <h4>No logs avaliable for this vehicle</h4> {% endif %}
+        {% if logs_paginator.number > 0 %}
+            <table class="table table-striped">
+                <tr class="text-center">
+                    <th scope="col">Log ID</th>
+                    <th scope="col">Device ID</th>
+                    <th scope="col">Date Time</th>
+                    <th scope="col">engine RPM</th>
+                    <th scope="col">Engine ON</th>
+                    <th scope="col">Coolant temp</th>
+                </tr>
+                {% for log in logs_paginator %}
+                    <tr class="text-center">
+                        <td>{{ log.id }}</td>
+                        <td>{{ log.device_id.device_id }}</td>
+                        <td>{{ log.dt_log }}</td>
+                        <td>{{ log.engine_rpm }}</td>
+                        <td>{{ log.engine_on }}</td>
+                        <td>{{ log.coolant_temp }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% include "main/vehicle/logs_pagination.html" %}
+        {% else %} <h4>No logs available for this vehicle</h4> {% endif %}
 
-        </table>
+    {% else %}
+        <h1>There is no such vehicle!</h1>
+    {% endif %}
+
 
 {% endblock %}

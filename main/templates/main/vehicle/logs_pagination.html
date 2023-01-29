@@ -1,0 +1,6 @@
+{% if logs_paginator.has_previous %}
+    <a class="btn btn-outline-secondary" href="?page={{ logs_paginator.previous_page_number }}">Previous</a>
+{% endif %}
+{% if logs_paginator.has_next %}
+    <a class="btn btn-outline-secondary" href="?page={{ logs_paginator.next_page_number }}">Next</a>
+{% endif %}
