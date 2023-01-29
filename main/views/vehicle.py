@@ -1,30 +1,45 @@
 from django.urls import reverse_lazy
 from django.shortcuts import render
 from django.views.generic import (
-    ListView,
-    DetailView,
     CreateView,
     UpdateView,
     DeleteView,
     View,
 )
-from main.models.vehicles import Vehicles
+from main.models.vehicles import Vehicles, VehicleTypes
 from main.models.logs import DataLogs
 from main.models.devices import TrackingDevices
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from main.forms import VehicleUpdateForm, VehicleCreateForm
 
 
-class VehiclesListView(LoginRequiredMixin, ListView):
+class VehiclesListView(LoginRequiredMixin, View):
     template_name = "main/vehicle/vehicle_list.html"
-    model = Vehicles
 
-    def get_queryset(self):
-        vehicle_search = self.request.GET.get("name", "").lower()
-        vehicles = self.model.objects.all()
-        if len(vehicle_search) > 0:
-            vehicles = vehicles.filter(vehicle_desc__icontains=vehicle_search)
-        return vehicles
+    def get(self, request):
+        vehicle_search_query = self.request.GET.get("name", "").lower()
+        vehicle_type_query = self.request.GET.get("type", "")
+        vehicles = Vehicles.objects.all()
+        vehicle_types = VehicleTypes.objects.all()
+
+        if len(vehicle_search_query) > 0 and len(vehicle_type_query) > 0:
+            vehicles = vehicles.filter(
+                vehicle_desc__icontains=vehicle_search_query,
+                vehicle_type_id__vehicle_type_id=vehicle_type_query,
+            )
+        elif len(vehicle_search_query) > 0:
+            vehicles = vehicles.filter(vehicle_desc__icontains=vehicle_search_query)
+        elif len(vehicle_type_query) > 0:
+            vehicles = vehicles.filter(
+                vehicle_type_id__vehicle_type_id=vehicle_type_query
+            )
+
+        return render(
+            request,
+            template_name=self.template_name,
+            context={"vehicles": vehicles, "vehicle_types": vehicle_types},
+        )
 
 
 class VehiclesDetailView(LoginRequiredMixin, View):
@@ -45,14 +60,16 @@ class VehiclesDetailView(LoginRequiredMixin, View):
         device = TrackingDevices.objects.filter(
             vehicle_id=vehicle.vehicle_id, active_device=True
         ).first()
-
-        paginator = Paginator(logs, 10)
-        try:
-            page_obj = paginator.page(page_num)
-        except PageNotAnInteger:
-            page_obj = paginator.page(1)
-        except EmptyPage:
-            page_obj = paginator.page(paginator.num_pages)
+        if logs:
+            paginator = Paginator(logs, 10)
+            try:
+                page_obj = paginator.page(page_num)
+            except PageNotAnInteger:
+                page_obj = paginator.page(1)
+            except EmptyPage:
+                page_obj = paginator.page(paginator.num_pages)
+        else:
+            page_obj = None
 
         return render(
             request,
@@ -68,34 +85,16 @@ class VehiclesDetailView(LoginRequiredMixin, View):
 class VehicleCreateView(LoginRequiredMixin, CreateView):
     template_name = "main/vehicle/vehicle_create.html"
     model = Vehicles
-    fields = [
-        "vehicle_id",
-        "vehicle_type_id",
-        "vehicle_desc",
-        "dt_bought",
-        "dt_sold",
-        "active_vehicle",
-    ]
+    form_class = VehicleCreateForm
     success_url = reverse_lazy("vehicle_list")
 
 
 class VehicleUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "main/vehicle/vehicle_update.html"
     model = Vehicles
-    fields = [
-        "vehicle_id",
-        "vehicle_type_id",
-        "vehicle_desc",
-        "dt_bought",
-        "dt_sold",
-        "active_vehicle",
-    ]
+    form_class = VehicleUpdateForm
+
     success_url = reverse_lazy("vehicle_list")
-
-
-# class VehicleUpdateViewa(LoginRequiredMixin, View):
-#     template_name = "main/vehicle/vehicle_update.html"
-#
 
 
 class VehicleDeleteView(LoginRequiredMixin, DeleteView):

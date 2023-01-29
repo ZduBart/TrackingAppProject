@@ -14,7 +14,7 @@
 
         <a class="btn btn-outline-secondary" href="{% url 'vehicle_update' vehicle.vehicle_id %}">Edit vehicle</a>
         <a class="btn btn-outline-secondary" href="{% url 'vehicle_delete' vehicle.vehicle_id %}">Delete vehicle</a>
-        {% if logs_paginator.number > 0 %}
+        {% if logs_paginator %}
             <table class="table table-striped">
                 <tr class="text-center">
                     <th scope="col">Log ID</th>
