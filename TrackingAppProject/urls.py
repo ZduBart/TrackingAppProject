@@ -19,6 +19,7 @@ from users import views as users_views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    path("api/", include("vehicles_details_api.urls")),
     path("", include("main.urls")),
     path("register/", users_views.register, name="register"),
     path("profile/", users_views.profile, name="profile"),

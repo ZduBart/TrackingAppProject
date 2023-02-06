@@ -9,7 +9,10 @@ class DataLogs(models.Model):
         TrackingDevices, db_column="device_id", on_delete=models.CASCADE
     )
     vehicle_id = models.ForeignKey(
-        Vehicles, db_column="vehicle_id", on_delete=models.CASCADE
+        Vehicles,
+        db_column="vehicle_id",
+        on_delete=models.CASCADE,
+        related_name="data_logs",
     )
     dt_log = models.DateTimeField()
     latitude = models.CharField(max_length=15)
