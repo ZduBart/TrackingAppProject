@@ -38,6 +38,8 @@ class VehicleCreateForm(forms.ModelForm):
 
     vehicle_id = forms.CharField(max_length=50)
     vehicle_type_id = forms.ModelChoiceField(queryset=VehicleTypes.objects.all())
-    vehicle_desc = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}))
+    vehicle_desc = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 1}), max_length=50
+    )
     dt_bought = forms.DateField(widget=NumberInput(attrs={"type": "date"}))
     active_vehicle = forms.BooleanField(required=False)

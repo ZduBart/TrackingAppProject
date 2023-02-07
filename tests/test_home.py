@@ -13,4 +13,8 @@ class TestHomeView(TestCase):
         actual_status_code = resp.status_code
 
         self.assertEqual(actual_status_code, expected_status_code)
-        # assert actual_status_code == expected_status_code
+
+    def test_view_uses_correct_template(self):
+        resp = self.client.get(reverse("home"))
+
+        self.assertTemplateUsed(resp, "main/base.html")
