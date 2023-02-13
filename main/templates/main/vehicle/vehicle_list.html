@@ -14,11 +14,16 @@
         </label>
     </form>
   <ul>
-    {% for vehicle in vehicles %}
+  {%  if vehicle_paginator %}
+    {% for vehicle in vehicle_paginator %}
       <li>
             <a class="list-group-item list-group-item-action" href = "{% url 'vehicle_detail' vehicle.vehicle_id %}"> {{ vehicle.vehicle_id }} {{ vehicle.vehicle_desc }}</a>
       </li>
     {% endfor %}
+      {%  include "main/vehicle/vehicle_list_pagination.html" %}
+  {% else %}
+  <h4>No vehicles found</h4>
+  {% endif %}
   </ul>
         <a class="btn btn-outline-secondary" href="{% url 'vehicle_create' %}">Add new vehicle</a>
 

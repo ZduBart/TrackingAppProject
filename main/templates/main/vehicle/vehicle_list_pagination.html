@@ -1,0 +1,18 @@
+{% if  vehicle_paginator.paginator.num_pages > 1  %}
+{% if vehicle_paginator.has_previous %}
+    <a class="btn btn-outline-secondary" href="?page=1&name={{ name }}&type={{ type }}">First</a>
+    <a class="btn btn-outline-secondary" href="?page={{ vehicle_paginator.previous_page_number }}&name={{ name }}&type={{ type }}">Previous</a>
+{% endif %}
+{% for num in vehicle_paginator.paginator.page_range %}
+        {% if vehicle_paginator.number == num %}
+            <a class="btn btn-info" href="?page={{ num }}&name={{ name }}&type={{ type }}">{{ num }}</a>
+        {% elif num > vehicle_paginator.number|add:'-3' and num < vehicle_paginator.number|add:'3' %}
+            <a class="btn btn-outline-info" href="?page={{ num }}&name={{ name }}&type={{ type }}">{{ num }}</a>
+        {% endif %}
+{% endfor %}
+    {% if vehicle_paginator.has_next %}
+
+    <a class="btn btn-outline-secondary" href="?page={{ vehicle_paginator.next_page_number }}&name={{ name }}&type={{ type }}">Next</a>
+    <a class="btn btn-outline-secondary" href="?page={{ vehicle_paginator.paginator.num_pages }}&name={{ name }}&type={{ type }}">Last</a>
+    {% endif %}
+{% endif %}

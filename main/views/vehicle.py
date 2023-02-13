@@ -18,6 +18,7 @@ class VehiclesListView(LoginRequiredMixin, View):
     template_name = "main/vehicle/vehicle_list.html"
 
     def get(self, request):
+        page_num = self.request.GET.get("page", 1)
         vehicle_search_query = self.request.GET.get("name", "").lower()
         vehicle_type_query = self.request.GET.get("type", "")
         vehicles = Vehicles.objects.all()
@@ -35,10 +36,26 @@ class VehiclesListView(LoginRequiredMixin, View):
                 vehicle_type_id__vehicle_type_id=vehicle_type_query
             )
 
+        if vehicles:
+            paginator = Paginator(vehicles, 2)
+            try:
+                page_obj = paginator.page(page_num)
+            except PageNotAnInteger:
+                page_obj = paginator.page(1)
+            except EmptyPage:
+                page_obj = paginator.page(paginator.num_pages)
+        else:
+            page_obj = None
+
         return render(
             request,
             template_name=self.template_name,
-            context={"vehicles": vehicles, "vehicle_types": vehicle_types},
+            context={
+                "vehicle_paginator": page_obj,
+                "vehicle_types": vehicle_types,
+                "name": vehicle_search_query,
+                "type": vehicle_type_query,
+            },
         )
 
 
