@@ -1,10 +1,12 @@
-from django.shortcuts import render
 from rest_framework.generics import ListAPIView
 from main.models.vehicles import Vehicles
-from main.models.logs import DataLogs
+from .serializers import LogsSerializer
+import pusher
 
 
 class GetVehicleDetailsByDay(ListAPIView):
+    serializer_class = LogsSerializer
+
     def get_queryset(self):
         pk = self.kwargs["pk"]
         year = int(self.request.GET["year"])

@@ -14,6 +14,7 @@
 
         <a class="btn btn-outline-secondary" href="{% url 'vehicle_update' vehicle.vehicle_id %}">Edit vehicle</a>
         <a class="btn btn-outline-secondary" href="{% url 'vehicle_delete' vehicle.vehicle_id %}">Delete vehicle</a>
+
         {% if logs_paginator %}
             <table class="table table-striped">
                 <tr class="text-center">
@@ -42,5 +43,10 @@
         <h1>There is no such vehicle!</h1>
     {% endif %}
 
-
 {% endblock %}
+
+
+
+
+
+<!-- href="/api/vehicles/{{ vehicle.vehicle_id }}/day/?day=19&month=5&year=2022"-->

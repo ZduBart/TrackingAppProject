@@ -6,6 +6,7 @@ from main.views.vehicle import (
     VehicleCreateView,
     VehiclesListView,
     VehiclesDetailView,
+    VehicleChartView,
 )
 from main.views.device import (
     DevicesListView,
@@ -32,6 +33,7 @@ urlpatterns = [
     path(
         "vehicles/delete/<int:pk>", VehicleDeleteView.as_view(), name="vehicle_delete"
     ),
+    path("vehicles/chart/<int:pk>", VehicleChartView.as_view(), name="vehicle_chart"),
     path("devices", DevicesListView.as_view(), name="device_list"),
     path("devices/create", DevicesCreateView.as_view(), name="device_create"),
     path("devices/delete/<int:pk>", DevicesDeleteView.as_view(), name="device_delete"),

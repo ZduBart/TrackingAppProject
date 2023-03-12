@@ -94,3 +94,5 @@ idea/
 ### coverage ###
 htmlcov/
 .coverage
+
+main/publisher_credentials.py

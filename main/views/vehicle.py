@@ -1,11 +1,6 @@
 from django.urls import reverse_lazy
 from django.shortcuts import render
-from django.views.generic import (
-    CreateView,
-    UpdateView,
-    DeleteView,
-    View,
-)
+from django.views.generic import CreateView, UpdateView, DeleteView, View, TemplateView
 from main.models.vehicles import Vehicles, VehicleTypes
 from main.models.logs import DataLogs
 from main.models.devices import TrackingDevices
@@ -118,3 +113,12 @@ class VehicleDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "main/vehicle/vehicle_delete.html"
     model = Vehicles
     success_url = reverse_lazy("vehicle_list")
+
+
+class VehicleChartView(LoginRequiredMixin, TemplateView):
+    template_name = "main/vehicle/vehicle_chart.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["vehicle"] = Vehicles.objects.get(vehicle_id=self.kwargs["pk"])
+        return context
