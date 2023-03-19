@@ -5,7 +5,7 @@ from .views import GetVehicleDetailsByDay
 
 urlpatterns = [
     path(
-        "vehicles/<int:pk>/day/",
+        "vehicles/<int:pk>/details/",
         GetVehicleDetailsByDay.as_view(),
         name="vehicle_details_api",
     ),

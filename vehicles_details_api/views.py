@@ -1,7 +1,6 @@
 from rest_framework.generics import ListAPIView
 from main.models.vehicles import Vehicles
 from .serializers import LogsSerializer
-import pusher
 
 
 class GetVehicleDetailsByDay(ListAPIView):

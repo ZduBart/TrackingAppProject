@@ -1,10 +1,21 @@
 {% extends "main/base.html" %}
 {% load static %}
-{%  block content %}
-{% endblock %}
 
 {% block script %}
-    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-    <script src="{% static 'main/js/vehicle_chart.js' %}"></script>
+<script src="{% static 'main/js/vehicle_chart_day.js' %}"></script>
 
+<script type="module" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{#    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>#}
+{#    <script src="{% static 'main/js/vehicle_chart_pusher.js' %}"></script>#}
+
+
+{% endblock %}
+
+
+{%  block content %}
+
+  <div id="container" >
+    <canvas id="pie-chart"></canvas>
+  </div>
 {% endblock %}

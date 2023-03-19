@@ -14,6 +14,7 @@
 
         <a class="btn btn-outline-secondary" href="{% url 'vehicle_update' vehicle.vehicle_id %}">Edit vehicle</a>
         <a class="btn btn-outline-secondary" href="{% url 'vehicle_delete' vehicle.vehicle_id %}">Delete vehicle</a>
+        <a class="btn btn-outline-secondary" href="{% url 'vehicle_chart' vehicle.vehicle_id %}">Show charts</a>
 
         {% if logs_paginator %}
             <table class="table table-striped">
