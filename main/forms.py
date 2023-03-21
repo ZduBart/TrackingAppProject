@@ -1,5 +1,6 @@
 from django import forms
 from main.models.vehicles import Vehicles, VehicleTypes
+from main.models.parameters import Parameters
 from django.forms.widgets import NumberInput
 
 
@@ -43,3 +44,8 @@ class VehicleCreateForm(forms.ModelForm):
     )
     dt_bought = forms.DateField(widget=NumberInput(attrs={"type": "date"}))
     active_vehicle = forms.BooleanField(required=False)
+
+
+class VehicleChartForm(forms.Form):
+    parameter_to_display = forms.ModelChoiceField(queryset=Parameters.objects.all())
+    day_to_display = forms.DateField(widget=NumberInput(attrs={"type": "date"}))

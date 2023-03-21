@@ -6,7 +6,7 @@ from main.models.logs import DataLogs
 from main.models.devices import TrackingDevices
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.forms import VehicleUpdateForm, VehicleCreateForm
+from main.forms import VehicleUpdateForm, VehicleCreateForm, VehicleChartForm
 
 
 class VehiclesListView(LoginRequiredMixin, View):
@@ -117,8 +117,11 @@ class VehicleDeleteView(LoginRequiredMixin, DeleteView):
 
 class VehicleChartView(LoginRequiredMixin, TemplateView):
     template_name = "main/vehicle/vehicle_chart.html"
+    form_class = VehicleChartForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["vehicle"] = Vehicles.objects.get(vehicle_id=self.kwargs["pk"])
+        context["form"] = VehicleChartForm
+
         return context
