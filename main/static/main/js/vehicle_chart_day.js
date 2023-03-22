@@ -1,5 +1,5 @@
-async function getData(day, month, year) {
-    let vehicleDetailsUrl = `/api/vehicles/1/details/?day=${day}&month=${month}&year=${year}`;
+async function getData(vehicleID, day, month, year) {
+    let vehicleDetailsUrl = `/api/vehicles/${vehicleID}/details/?day=${day}&month=${month}&year=${year}`;
 
     const fetchData = await fetch(vehicleDetailsUrl);
     const jsonData = await fetchData.json();
@@ -64,20 +64,19 @@ function getConfig(data) {
 };
 
 // window.onload = () => {
-//    let outputGraphData = getData(18, 5, 2022).then((outputGraphData) => {
-//    let config = getConfig(outputGraphData);
-//    console.log(outputGraphData);
-//    console.log(config);
-//
-//    let ctx = document.getElementById('pie-chart').getContext('2d');
-//    window.myPie = new Chart(ctx, config);
-// });
+//     var pathArray = window.location.pathname.split('/');
+//     var secondLevelLocation = pathArray[3];
+//     console.log(secondLevelLocation);
+// };
 
 function getForm() {
     const form = document.getElementById('myForm');
     const data = Object.fromEntries(new FormData(form).entries());
+    const urlArray = window.location.pathname.split('/');
+    const vehicleID = urlArray[3];
+    console.log(vehicleID);
     let date = new Date(data['day_to_display']);
-    let outputGraphData = getData(date.getDate(), date.getMonth() + 1, date.getFullYear()).then((outputGraphData) => {
+    let outputGraphData = getData(vehicleID, date.getDate(), date.getMonth() + 1, date.getFullYear()).then((outputGraphData) => {
         let config = getConfig(outputGraphData);
         console.log(outputGraphData);
         console.log(config);
