@@ -4,21 +4,24 @@ async function getData(vehicleID, day, month, year) {
     const fetchData = await fetch(vehicleDetailsUrl);
     const jsonData = await fetchData.json();
 
-
     let coolantTemps = []
+    let oilTemps = []
+    let engineRPM = []
     let dts = []
 
     for (let i = 0; i < jsonData.length; i++) {
         let entry = jsonData[i];
-        let temp = entry["coolant_temp"];
+        let coolantTemp = entry["coolant_temp"];
+        let oilTemp = entry["oil_temp"];
+        let engineRev = entry["engine_rpm"];
         let dt = entry["dt_log"];
 
+        coolantTemps.push(coolantTemp);
+        oilTemps.push(oilTemp);
+        engineRPM.push(engineRev);
         dts.push(dt);
-        coolantTemps.push(temp);
     }
 
-    console.log(coolantTemps);
-    console.log(dts);
 
     let outputGraphData = {
         labels: dts,
@@ -29,64 +32,54 @@ async function getData(vehicleID, day, month, year) {
                 borderColor: "#ff0000",
                 backgroundColor: "#79AEC8",
                 fill: false,
-                tension: 0
+            },
+            {
+                label: 'Oil temperature',
+                data: oilTemps,
+                borderColor: "#61f803",
+                backgroundColor: "#79AEC8",
+                fill: false,
             },
         ]
     };
-    console.log(outputGraphData);
     return outputGraphData;
 }
-
 
 function getConfig(data) {
     let config = {
         type: 'line',
         data: data,
         options: {
-            scales: {
-                y: {
-                    // beginAtZero: true,
-
+            animations: {
+                tension: {
+                    duration: 1000,
+                    easing: 'easeInQuad',
+                    from: 0.5,
+                    to: 0,
+                    loop: true
                 }
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'top',
             },
-            title: {
-                display: true,
-                text: 'Chart.js Line Chart'
-            }
-        },
+
+        }
     };
     return config;
-};
+}
 
-// window.onload = () => {
-//     var pathArray = window.location.pathname.split('/');
-//     var secondLevelLocation = pathArray[3];
-//     console.log(secondLevelLocation);
-// };
-
-function getForm() {
+async function getForm() {
     const form = document.getElementById('myForm');
     const data = Object.fromEntries(new FormData(form).entries());
     const urlArray = window.location.pathname.split('/');
     const vehicleID = urlArray[3];
-    console.log(vehicleID);
+    let parameterID = data['parameter_to_display'];
     let date = new Date(data['day_to_display']);
-    let outputGraphData = getData(vehicleID, date.getDate(), date.getMonth() + 1, date.getFullYear()).then((outputGraphData) => {
-        let config = getConfig(outputGraphData);
-        console.log(outputGraphData);
-        console.log(config);
+    let outputGraphData = await getData(vehicleID, date.getDate(), date.getMonth() + 1, date.getFullYear(), parameterID );
 
-        let ctx = document.getElementById('pie-chart').getContext('2d');
-        window.myPie = new Chart(ctx, config);
+    let config = getConfig(outputGraphData);
 
-        console.log(date.getDate());
-        console.log(date.getMonth());
-        console.log(date.getFullYear());
+    let ctx = document.getElementById('pie-chart').getContext('2d');
 
-    })
+    if(window.myPie instanceof Chart){
+        window.myPie.destroy();
+    }
+    window.myPie = new Chart(ctx, config);
 }

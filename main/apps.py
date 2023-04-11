@@ -1,5 +1,6 @@
 from django.apps import AppConfig
-from main.publisher import PublisherThread
+
+# from main.publisher import PublisherThread
 
 
 class MainConfig(AppConfig):

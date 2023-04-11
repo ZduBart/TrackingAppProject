@@ -1,4 +1,4 @@
-"""TrackingAppProject URL Configuration
+"""tracking_app_project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/

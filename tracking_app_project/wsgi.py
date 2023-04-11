@@ -1,5 +1,5 @@
 """
-WSGI config for TrackingAppProject project.
+WSGI config for tracking_app_project project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -10,9 +10,10 @@ https://docs.djangoproject.com/en/4.1/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
-from main.publisher import PublisherThread
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "TrackingAppProject.settings")
+# from main.publisher import PublisherThread
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tracking_app_project.settings")
 
 application = get_wsgi_application()
 # publisher = PublisherThread()
