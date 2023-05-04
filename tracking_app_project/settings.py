@@ -39,6 +39,7 @@ REST_FRAMEWORK = {
 INSTALLED_APPS = [
     "rest_framework",
     "crispy_forms",
+    "crispy_bootstrap4",
     "main.apps.MainConfig",
     "users.apps.UsersConfig",
     "django.contrib.admin",
@@ -83,10 +84,21 @@ WSGI_APPLICATION = "tracking_app_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / f'{decouple.config("DATABASE_NAME")}',
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / f'{decouple.config("DATABASE_NAME")}',
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": decouple.config("DATABASE_NAME"),
+        "USER": decouple.config("DATABASE_USER"),
+        "PASSWORD": decouple.config("DATABASE_PASSWORD"),
+        "HOST": decouple.config("DATABASE_HOST"),
+        "PORT": decouple.config("DATABASE_PORT"),
     }
 }
 
@@ -133,6 +145,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
 LOGIN_REDIRECT_URL = "home"
 
