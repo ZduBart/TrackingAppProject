@@ -1,5 +1,22 @@
 version: "3.9"
 services:
+  vehicles_db:
+    image: postgres:11-alpine
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 6s
+      timeout: 30s
+      retries: 6
+    restart: always
+
   web:
     build:
       context: ../
@@ -22,25 +39,6 @@ services:
         python manage.py migrate
         python manage.py runserver 0.0.0.0:8000
 
-
-
     depends_on:
       vehicles_db:
         condition: service_healthy
-
-  vehicles_db:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-      - POSTGRES_DB=${DATABASE_NAME}
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 6s
-      timeout: 30s
-      retries: 6
-    restart: always
