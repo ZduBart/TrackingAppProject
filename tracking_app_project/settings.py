@@ -84,23 +84,24 @@ WSGI_APPLICATION = "tracking_app_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / f'{decouple.config("DATABASE_NAME")}',
-#     }
-# }
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": decouple.config("DATABASE_NAME"),
-        "USER": decouple.config("DATABASE_USER"),
-        "PASSWORD": decouple.config("DATABASE_PASSWORD"),
-        "HOST": decouple.config("DATABASE_HOST"),
-        "PORT": decouple.config("DATABASE_PORT"),
+if bool(decouple.config("WORKFLOW_GITHUB")) is True:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / f'{decouple.config("DATABASE_NAME")}',
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": decouple.config("DATABASE_NAME"),
+            "USER": decouple.config("DATABASE_USER"),
+            "PASSWORD": decouple.config("DATABASE_PASSWORD"),
+            "HOST": decouple.config("DATABASE_HOST"),
+            "PORT": decouple.config("DATABASE_PORT"),
+        }
+    }
 
 
 # Password validation
