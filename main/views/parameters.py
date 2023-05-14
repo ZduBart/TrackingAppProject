@@ -1,15 +1,16 @@
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-    View,
-)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.urls import reverse_lazy
-from main.models.devices import TrackingDevices, DeviceParam
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+    View,
+)
+
+from main.models.devices import DeviceParam, TrackingDevices
 from main.models.parameters import Parameters
 
 
@@ -25,7 +26,7 @@ class ParametersDetailView(LoginRequiredMixin, View):
         parameter = get_object_or_404(Parameters, pk=pk)
         try:
             devices = get_list_or_404(DeviceParam, param_id=parameter.param_id)
-        except:
+        except DeviceParam.DoesNotExist:
             devices = None
 
         return render(
