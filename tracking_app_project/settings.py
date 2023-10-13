@@ -27,7 +27,7 @@ SECRET_KEY = decouple.config("SECRET_KEY")  # config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(decouple.config("DEBUG"))  # bool(config("DEBUG"))
 
-ALLOWED_HOSTS = ["18.156.143.144", "127.0.0.1"]
+ALLOWED_HOSTS = ["tap-3-dev.eu-central-1.elasticbeanstalk.com", "127.0.0.1"]
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
@@ -85,24 +85,24 @@ WSGI_APPLICATION = "tracking_app_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-if bool(decouple.config("WORKFLOW_GITHUB")) is True:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / f'{decouple.config("DATABASE_NAME")}',
-        }
+# if bool(decouple.config("WORKFLOW_GITHUB")) is True:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": BASE_DIR / f'{decouple.config("DATABASE_NAME")}',
+#         }
+#     }
+# else:
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": decouple.config("DATABASE_NAME"),
+        "USER": decouple.config("DATABASE_USER"),
+        "PASSWORD": decouple.config("DATABASE_PASSWORD"),
+        "HOST": decouple.config("DATABASE_HOST"),
+        "PORT": decouple.config("DATABASE_PORT"),
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": decouple.config("DATABASE_NAME"),
-            "USER": decouple.config("DATABASE_USER"),
-            "PASSWORD": decouple.config("DATABASE_PASSWORD"),
-            "HOST": decouple.config("DATABASE_HOST"),
-            "PORT": decouple.config("DATABASE_PORT"),
-        }
-    }
+}
 
 
 # Password validation
@@ -140,7 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
 # Default primary key field type

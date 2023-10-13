@@ -104,3 +104,5 @@ main/publisher_credentials.py
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+/myenv
+/backup
