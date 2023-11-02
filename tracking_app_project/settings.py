@@ -27,7 +27,7 @@ SECRET_KEY = decouple.config("SECRET_KEY")  # config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(decouple.config("DEBUG"))  # bool(config("DEBUG"))
 
-ALLOWED_HOSTS = ["tap-3-dev.eu-central-1.elasticbeanstalk.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["tap-3-dev.eu-central-1.elasticbeanstalk.com", "172.31.23.113", "127.0.0.1"]
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -82,27 +83,24 @@ TEMPLATES = [
 WSGI_APPLICATION = "tracking_app_project.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-# if bool(decouple.config("WORKFLOW_GITHUB")) is True:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.sqlite3",
-#             "NAME": BASE_DIR / f'{decouple.config("DATABASE_NAME")}',
-#         }
-#     }
-# else:
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": decouple.config("DATABASE_NAME"),
-        "USER": decouple.config("DATABASE_USER"),
-        "PASSWORD": decouple.config("DATABASE_PASSWORD"),
-        "HOST": decouple.config("DATABASE_HOST"),
-        "PORT": decouple.config("DATABASE_PORT"),
+if bool(decouple.config("WORKFLOW_GITHUB")) is True:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / f'{decouple.config("DATABASE_NAME")}',
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": decouple.config("DATABASE_NAME"),
+            "USER": decouple.config("DATABASE_USER"),
+            "PASSWORD": decouple.config("DATABASE_PASSWORD"),
+            "HOST": decouple.config("DATABASE_HOST"),
+            "PORT": decouple.config("DATABASE_PORT"),
+        }
+    }
 
 
 # Password validation
@@ -136,11 +134,19 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-STATIC_URL = "static/"
+STORAGE_DESTINATION = decouple.config("STORAGE_DESTINATION")
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+if STORAGE_DESTINATION == "s3":
+    AWS_ACCESS_KEY_ID = decouple.config("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = decouple.config("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = decouple.config("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
+    STATICFILES_STORAGE = "storages.backends.s3.S3Storage"
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+else:
+    STATIC_URL = "/static/"
 
 
 # Default primary key field type
@@ -152,5 +158,6 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
 LOGIN_REDIRECT_URL = "home"
+
 
 LOGIN_URL = "login"
