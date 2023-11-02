@@ -38,4 +38,6 @@ jobs:
         DEBUG: ${{ vars.DEBUG }}
         DATABASE_NAME: ${{ vars.DATABASE_NAME }}
         WORKFLOW_GITHUB: ${{vars.WORKFLOW_GITHUB}}
+        STORAGE_DESTINATION: ${{vars.STORAGE_DESTINATION}}
+
       run: python manage.py test -v 2
