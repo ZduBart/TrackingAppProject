@@ -15,6 +15,7 @@ services:
       interval: 6s
       timeout: 30s
       retries: 6
+
     restart: always
 
   web:
@@ -31,7 +32,7 @@ services:
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_PORT=${DATABASE_PORT}
-      - DJANG   O_SETTINGS_MODULE=tracking_app_project.settings
+      - DJANGO_SETTINGS_MODULE=tracking_app_project.settings
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
