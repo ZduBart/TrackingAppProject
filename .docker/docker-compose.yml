@@ -33,6 +33,7 @@ services:
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_PORT=${DATABASE_PORT}
       - DJANGO_SETTINGS_MODULE=tracking_app_project.settings
+      - WORKFLOW_GITHUB=${WORKFLOW_GITHUB}
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
